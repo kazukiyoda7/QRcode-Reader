@@ -1,14 +1,25 @@
 import cv2
 from pyzbar.pyzbar import decode
+from PIL import Image
 
-image = cv2.imread("data/0.png")
 
-decoded_objects = decode(image)
+def read_qr_code(image_path):
+    # 画像を読み込む
+    image = cv2.imread(image_path)
 
-for obj in decoded_objects:
-    print("デコードされたデータ:", obj.data.decode("utf-8"))
-    print("QRコードの種類:", obj.type)
+    # QRコードをデコード
+    decoded_objects = decode(image)
 
-cv2.imshow("QRコード画像", image)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+    # 結果を表示
+    qr_codes = []
+    for obj in decoded_objects:
+        qr_codes.append(obj.data.decode('utf-8'))  # QRコードのデータを文字列にデコード
+        print(f"QRコードの内容: {obj.data.decode('utf-8')}")
+    
+    return qr_codes
+
+# 画像ファイルを指定
+image_path = "./data/google.com.png"
+qr_data = read_qr_code(image_path)
+if not qr_data:
+    print("QRコードが見つかりませんでした。")
